@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from app.db.daos.player_dao import PlayerDAO
@@ -25,8 +26,11 @@ class PlayerService:
             phone_number=player.phone
         )
 
-    def get_player_by_id(self, player_id: UUID) -> PlayerDTO:
-        pass
+    def get_player_by_id(self, player_id: UUID) -> Optional[PlayerDTO]:
+        player_dao = self._player_dao.get_by_id(str(player_id))
+        if player_dao is None:
+            return None
+        return PlayerDTO()
 
     def get_players(self, constraints: dict) -> list[PlayerDTO]:
         pass
