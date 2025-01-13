@@ -2,14 +2,15 @@ import logging
 
 from fastapi import APIRouter, HTTPException
 
-from app.dto.player_dto import PlayerDTO, PlayerCreateDTO
+from app.dto.player_dto import PlayerCreateDTO, PlayerDTO
 from app.exceptions import PlayerAlreadyExists
 from app.services.players_service import PlayerService
 
 logger = logging.getLogger(__name__)
 
+
 class PlayersController:
-    router = APIRouter(prefix='/players')
+    router = APIRouter(prefix="/players")
 
     def __init__(self, players_service: PlayerService):
         self._players_service = players_service
@@ -28,8 +29,5 @@ class PlayersController:
         try:
             rsp = self._players_service.add_player(req)
         except PlayerAlreadyExists as e:
-            raise HTTPException(status_code=e.status_code, detail=e.detail)
+            raise HTTPException(status_code=e.status_code, detail=e.detail) from e
         return rsp
-
-
-

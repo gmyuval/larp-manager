@@ -3,7 +3,7 @@ from uuid import UUID
 
 from app.db.daos.player_dao import PlayerDAO
 from app.db.db_connection_handler import DBConnectionHandler
-from app.dto.player_dto import PlayerDTO, PlayerCreateDTO
+from app.dto.player_dto import PlayerCreateDTO, PlayerDTO
 
 
 class PlayerService:
@@ -15,7 +15,7 @@ class PlayerService:
             first_name=player_create_dto.first_name,
             last_name=player_create_dto.last_name,
             email=player_create_dto.email,
-            phone=player_create_dto.phone_number
+            phone=player_create_dto.phone_number,
         )
 
         return PlayerDTO(
@@ -23,7 +23,7 @@ class PlayerService:
             first_name=player.first_name,
             last_name=player.last_name,
             email=player.email,
-            phone_number=player.phone
+            phone_number=player.phone,
         )
 
     def get_player_by_id(self, player_id: UUID) -> Optional[PlayerDTO]:

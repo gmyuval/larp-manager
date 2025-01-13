@@ -1,0 +1,23 @@
+[tool.black]
+line-length = 120
+target-version = ["py39"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | \build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"  # Ensure compatibility with Black's formatting
+line_length = 120   # Match Black's line length
+include_trailing_comma = true
+multi_line_output = 3
+known_first_party = ["app"]  # Treat 'app' as a first-party module
+known_third_party = ["fastapi", "sqlalchemy", "pydantic", "uvicorn"]
+default_section = "THIRDPARTY"
+force_grid_wrap = 0
+combine_as_imports = true
