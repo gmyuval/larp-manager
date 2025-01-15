@@ -1,6 +1,26 @@
+[project]
+name = "larp-manager"
+version = "0.0.1"
+authors = ["Yuval Moran <yuvalg@gmail.com"]
+dependencies = [
+    "fastapi",
+    "pydantic",
+    "uvicorn",
+    "sqlalchemy"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pip-tools",
+    "pylint",
+    "black",
+    "isort",
+    "pre-commit"
+]
+
 [tool.black]
 line-length = 120
-target-version = ["py39"]
+target-version = ["py312"]
 include = '\.pyi?$'
 exclude = '''
 /(

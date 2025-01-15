@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Optional
 from uuid import UUID
 
@@ -17,3 +18,4 @@ class PlayerCreateDTO(BaseModel):
     last_name: str
     email: str
     phone_number: Optional[str] = None
+    date_of_birth: Optional[date] = None

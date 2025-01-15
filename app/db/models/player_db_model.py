@@ -1,7 +1,8 @@
 import uuid
+from datetime import date
 from typing import Type
 
-from sqlalchemy import Computed, String
+from sqlalchemy import Computed, Date, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.models.base import BaseDBModel, T
@@ -19,6 +20,7 @@ class PlayerDBModel(BaseDBModel):
     )
     email: Mapped[str] = mapped_column(index=True, unique=True, nullable=False)
     phone: Mapped[str | None] = mapped_column(index=True, nullable=True)
+    date_of_birth: Mapped[date] = mapped_column(Date, nullable=False)
     registered_games: Mapped[list["GameDBModel"]] = relationship(
         "Game", secondary="registrations", back_populates="players"
     )

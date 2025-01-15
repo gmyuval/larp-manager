@@ -3,21 +3,24 @@ from typing import Optional
 
 from sqlalchemy.orm import Session
 
+from app.db.daos.base_dao import BaseDAO
 from app.db.db_connection_handler import DBConnectionHandler
-from app.db.models.game import GameDBModel
-from app.db.models.player import PlayerDBModel
+from app.db.models.game_db_model import GameDBModel
+from app.db.models.player_db_model import PlayerDBModel
 from app.dto.player_dto import PlayerDTO
 from app.exceptions import PlayerAlreadyExists
 
 logger = logging.getLogger(__name__)
 
 
-class PlayerDAO:
+class PlayerDAO(BaseDAO):
     def __init__(self, db_handler: DBConnectionHandler):
-        self._db_handler = db_handler
+        super().__init__(db_handler)
 
-    def add(self, first_name: str, last_name: str, email: str, phone: Optional[str]) -> PlayerDBModel:
-        new_player = PlayerDBModel(first_name=first_name, last_name=last_name, email=email, phone=phone)
+    def add(
+        self, first_name: str, last_name: str, email: str, phone: Optional[str], pid: Optional[str] = None
+    ) -> PlayerDBModel:
+        new_player = PlayerDBModel(id=pid, first_name=first_name, last_name=last_name, email=email, phone=phone)
         with self._db_handler.session_scope() as session:
             existing_player = (
                 session.query(PlayerDBModel)

@@ -9,7 +9,8 @@ disable=
     C0115,  # Missing class docstring
     C0116,  # Missing function or method docstring
     R0903,  # Too few public methods
-    W1203
+    W1203,
+    R0913, # Too many arguments
 
 [FORMAT]
 max-line-length=120

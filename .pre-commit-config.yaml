@@ -8,10 +8,10 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: python pylint_hook.py --rcfile .pylintrc
         language: system
         types: [python]
-        args: [--rcfile=.pylintrc]
+
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.13.2
