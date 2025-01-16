@@ -9,7 +9,9 @@ class PlayerDTO(BaseModel):
     id: UUID
     first_name: str
     last_name: str
+    full_name: Optional[str] = None
     email: EmailStr
+    date_of_birth: Optional[date] = None
     phone_number: Optional[str] = None
 
 

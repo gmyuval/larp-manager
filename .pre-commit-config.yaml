@@ -1,8 +1,24 @@
 repos:
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        name: isort (python)
+
   - repo: https://github.com/psf/black
     rev: 24.10.0
     hooks:
       - id: black
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        name: mypy
+        language: system
+        types: [python]
+        pass_filenames: false
+        args: [--install-types, --non-interactive]
 
   - repo: local
     hooks:
@@ -11,10 +27,3 @@ repos:
         entry: python pylint_hook.py --rcfile .pylintrc
         language: system
         types: [python]
-
-
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        name: isort (python)

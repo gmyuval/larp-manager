@@ -1,12 +1,15 @@
 [project]
 name = "larp-manager"
 version = "0.0.1"
-authors = ["Yuval Moran <yuvalg@gmail.com"]
+authors = [
+    {name = "Yuval Moran", email = "yuvalg@gmail.com"},
+]
+requires-python = ">3.12"
 dependencies = [
     "fastapi",
     "pydantic",
     "uvicorn",
-    "sqlalchemy"
+    "sqlalchemy",
 ]
 
 [project.optional-dependencies]
@@ -15,11 +18,16 @@ dev = [
     "pylint",
     "black",
     "isort",
-    "pre-commit"
+    "pre-commit",
+    "mypy",
 ]
 
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [tool.black]
-line-length = 120
+line-length = 150
 target-version = ["py312"]
 include = '\.pyi?$'
 exclude = '''
@@ -27,13 +35,16 @@ exclude = '''
     \.git
   | \.venv
   | \build
+  | \.toml
+  | DockerFile
   | dist
 )/
 '''
+preview = true
 
 [tool.isort]
 profile = "black"  # Ensure compatibility with Black's formatting
-line_length = 120   # Match Black's line length
+line_length = 150   # Match Black's line length
 include_trailing_comma = true
 multi_line_output = 3
 known_first_party = ["app"]  # Treat 'app' as a first-party module
@@ -41,3 +52,10 @@ known_third_party = ["fastapi", "sqlalchemy", "pydantic", "uvicorn"]
 default_section = "THIRDPARTY"
 force_grid_wrap = 0
 combine_as_imports = true
+
+[tool.mypy]
+files = ["app"]
+exclude = ["hook.py$"]
+python_version = 3.12
+strict = true
+disallow_untyped_defs = false

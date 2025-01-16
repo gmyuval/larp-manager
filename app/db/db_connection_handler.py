@@ -1,6 +1,6 @@
 import logging
 from contextlib import contextmanager
-from typing import Iterator
+from typing import Any, Iterator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class DBConnectionHandler:
-    def __init__(self, connection_string="sqlite:///:memory:", **kwargs):
+    def __init__(self, connection_string: str = "sqlite:///:memory:", **kwargs: Any) -> None:
         self._engine = create_engine(connection_string, echo=False, **kwargs)
         logger.info(f"Connected to database: {connection_string}")
         self._session_maker = sessionmaker(bind=self._engine)

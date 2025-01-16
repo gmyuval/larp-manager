@@ -1,5 +1,5 @@
 from datetime import date
-from typing import Any, Optional
+from typing import Optional
 from uuid import UUID, uuid4
 
 from app.db.models.player_db_model import PlayerDBModel
@@ -15,7 +15,7 @@ class Player:
         last_name: str,
         full_name: Optional[str],
         email: str,
-        dob: date,
+        dob: Optional[date] = None,
         phone_number: Optional[str],
     ):
         self.id = pid
@@ -29,12 +29,6 @@ class Player:
     @staticmethod
     def generate_full_name(first_name: str, last_name: str) -> str:
         return f"{first_name} {last_name}"  # TODO: allow setting full_name format in config
-
-    @staticmethod
-    def validate_date_of_birth(value: Any) -> date:
-        if isinstance(value, date):
-            return value
-        raise TypeError(f"Date of birth must be of type datetime.date")
 
     @classmethod
     def from_dto(cls, dto: PlayerDTO) -> "Player":
@@ -66,6 +60,7 @@ class Player:
             first_name=self.first_name,
             last_name=self.last_name,
             email=self.email,
+            date_of_birth=self.date_of_birth,
             phone_number=self.phone_number,
         )
 
@@ -77,6 +72,16 @@ class Player:
             last_name=db_model.last_name,
             full_name=db_model.full_name,
             email=db_model.email,
-            dob=cls.validate_date_of_birth(db_model.date_of_birth),
+            dob=db_model.date_of_birth,
             phone_number=db_model.phone,
+        )
+
+    def to_db_model(self) -> PlayerDBModel:
+        return PlayerDBModel(
+            id=str(self.id),
+            first_name=self.first_name,
+            last_name=self.last_name,
+            full_name=self.full_name if self.full_name else self.generate_full_name(self.first_name, self.last_name),
+            email=self.email,
+            date_of_birth=self.date_of_birth,
         )

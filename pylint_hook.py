@@ -26,9 +26,7 @@ def main():
         print("No files to lint.")
         return 0
 
-    result = subprocess.run(
-        ["pylint", f"--rcfile={pylintrc}", *files], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
-    )
+    result = subprocess.run(["pylint", f"--rcfile={pylintrc}", *files], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     print(result.stdout)  # Print pylint output
 
     # Extract score from pylint output

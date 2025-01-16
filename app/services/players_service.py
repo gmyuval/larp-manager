@@ -7,7 +7,7 @@ from app.domain.player import Player
 from app.dto.player_dto import PlayerCreateDTO, PlayerDTO
 
 
-class PlayerService:
+class PlayersService:
     def __init__(self, db_handler: DBConnectionHandler):
         self._player_dao = PlayerDAO(db_handler)
 
@@ -27,8 +27,8 @@ class PlayerService:
             return None
         return Player.from_db_model(player_dao)
 
-    def get_players(self, constraints: dict) -> list[PlayerDTO]:
-        pass
+    def get_players(self, constraints: dict[str, str]) -> list[PlayerDTO]:
+        return []
 
     def register_player_to_game(self, player_id: UUID, game_id: UUID) -> bool:
-        pass
+        return False

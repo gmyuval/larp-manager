@@ -1,11 +1,15 @@
-from typing import Any, Type, TypeVar
+from typing import Any, TypeVar
 
-from pydantic import BaseModel
 from sqlalchemy import JSON, Column, ForeignKey, Table
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 
-Base = declarative_base()
 T = TypeVar("T", bound="BaseDBModel")
+
+
+class Base(DeclarativeBase):
+    pass
+
+
 registrations = Table(
     "registrations",
     Base.metadata,
@@ -16,8 +20,7 @@ registrations = Table(
 
 class BaseDBModel(Base):
     __abstract__ = True
-    type_annotation_map = {dict[str, Any]: JSON}
-
-    @classmethod
-    def from_dto(cls: Type[T], dto: BaseModel) -> T:
-        raise NotImplementedError
+    type_annotation_map = {
+        dict[str, Any]: JSON,
+        dict[str, str]: JSON,
+    }
