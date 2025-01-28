@@ -13,11 +13,3 @@ class PlayerDTO(BaseModel):
     email: EmailStr
     date_of_birth: Optional[date] = None
     phone_number: Optional[str] = None
-
-
-class PlayerCreateDTO(BaseModel):
-    first_name: str
-    last_name: str
-    email: str
-    phone_number: Optional[str] = None
-    date_of_birth: Optional[date] = None

@@ -2,8 +2,9 @@ from datetime import date
 from typing import Optional
 from uuid import UUID, uuid4
 
-from app.db.models.player_db_model import PlayerDBModel
-from app.dto.player_dto import PlayerCreateDTO, PlayerDTO
+from app.db.db_models.player_db_model import PlayerDBModel
+from app.models.dto.player_dto import PlayerDTO
+from app.models.dto.player_requests_dtos import PlayerCreateDTO
 
 
 class Player:

@@ -11,6 +11,7 @@ disable=
     R0903,  # Too few public methods
     W1203,
     R0913, # Too many arguments
+    E0213, # No self use warning
 
 [FORMAT]
 max-line-length=150

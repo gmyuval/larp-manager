@@ -3,8 +3,9 @@ from uuid import UUID
 
 from app.db.daos.player_dao import PlayerDAO
 from app.db.db_connection_handler import DBConnectionHandler
-from app.domain.player import Player
-from app.dto.player_dto import PlayerCreateDTO, PlayerDTO
+from app.models.domain.player import Player
+from app.models.dto.player_requests_dtos import PlayerCreateDTO, PlayersGetDTO
+from app.models.filter import Filter, FilterModel, Operator
 
 
 class PlayersService:
@@ -27,7 +28,21 @@ class PlayersService:
             return None
         return Player.from_db_model(player_dao)
 
-    def get_players(self, constraints: dict[str, str]) -> list[PlayerDTO]:
+    def get_players_by_filter(self, request_dto: PlayersGetDTO) -> list[Player]:
+        """
+        Get players from the database with specific filters.
+        The method allows for equality tests only. For scanning the DB with conditions use scan_players
+        :param request_dto: Request with conditions to be met
+        :return: list of players matching the conditions
+        """
+        request_dict = request_dto.model_dump()
+        filters = [
+            Filter(db_model=FilterModel.PLAYER, column_name=key, op=Operator.EQ, value=request_dict[key]) for key in request_dict if key != "limit"
+        ]
+        db_models = self._player_dao.get_players(*filters, limit=request_dto.limit)
+        return [Player.from_db_model(db_model) for db_model in db_models]
+
+    def scan_players(self) -> list[Player]:
         return []
 
     def register_player_to_game(self, player_id: UUID, game_id: UUID) -> bool:

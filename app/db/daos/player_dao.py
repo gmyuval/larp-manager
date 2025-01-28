@@ -1,13 +1,15 @@
 import logging
-from typing import Optional
+from typing import Any, Optional
 
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Query, Session
 
 from app.db.daos.base_dao import BaseDAO
-from app.db.models.game_db_model import GameDBModel
-from app.db.models.player_db_model import PlayerDBModel
-from app.domain.player import Player
-from app.exceptions import PlayerAlreadyExists
+from app.db.db_models.game_db_model import GameDBModel
+from app.db.db_models.player_db_model import PlayerDBModel
+from app.exceptions import PlayerAlreadyExists, PlayerNotFound
+from app.models.domain import Player
+from app.models.filter import Filter
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +17,7 @@ logger = logging.getLogger(__name__)
 class PlayerDAO(BaseDAO):
     def add(self, *, first_name: str, last_name: str, email: str, phone: Optional[str], pid: Optional[str] = None) -> PlayerDBModel:
         new_player = PlayerDBModel(id=pid, first_name=first_name, last_name=last_name, email=email, phone=phone)
-        with self._db_handler.session_scope() as session:
+        with self._db_handler.session_scope() as session:  # type: Session
             existing_player = (
                 session.query(PlayerDBModel)
                 .filter(
@@ -39,8 +41,31 @@ class PlayerDAO(BaseDAO):
                 logger.debug(f"Player with id {player_id} not found")
             return player
 
-    def get_players(self) -> list[PlayerDBModel]:
-        return []
+    def get_players(self, *filters: Filter, limit: Optional[int] = None) -> list[PlayerDBModel]:
+        if not filters:
+            raise ValueError("At least one filter is required")
+        with self._db_handler.session_scope() as session:  # type: Session
+            query: Query[PlayerDBModel] = session.query(PlayerDBModel)  # type: ignore
+            for player_filter in filters:
+                query = query.filter(player_filter.to_condition())
+            if limit:
+                query = query.limit(limit)
+            return query.all()
+
+    def update(self, player_id: str, **fields_to_update: dict[str, Any]) -> None:
+        with self._db_handler.session_scope() as session:  # type: Session
+            stmt = select(PlayerDBModel).filter_by(id=player_id)
+            player = session.execute(stmt).first()
+            if not player:
+                raise PlayerNotFound(f"Player with id {player_id} not found")
+            valid_columns = {column.key: column.type for column in PlayerDBModel.__table__.columns}  # type: ignore
+            for column, value in fields_to_update.items():
+                if column not in valid_columns:
+                    raise ValueError(f"Invalid column {column}")
+                if not isinstance(value, valid_columns[column].python_type):
+                    raise TypeError(f"column {column} expects value of type {valid_columns[column].python_type}. received {type(value)}")
+                setattr(player, column, value)
+            session.commit()
 
     def upsert(self, player: Player) -> Optional[PlayerDBModel]:
         player_model = player.to_db_model()

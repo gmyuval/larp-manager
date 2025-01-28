@@ -17,6 +17,13 @@ registrations = Table(
     Column("game_id", ForeignKey("games.id"), primary_key=True),
 )
 
+game_orgs = Table(
+    "game_orgs",
+    Base.metadata,
+    Column("org_id", ForeignKey("organizers.id"), primary_key=True),
+    Column("game_id", ForeignKey("games.id"), primary_key=True),
+)
+
 
 class BaseDBModel(Base):
     __abstract__ = True
