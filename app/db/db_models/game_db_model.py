@@ -5,6 +5,7 @@ from sqlalchemy import JSON, Date, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.db_models.base import Base
+from app.db.db_models.organizer_db_model import OrganizerDBModel
 from app.db.db_models.player_db_model import PlayerDBModel
 
 
@@ -25,7 +26,8 @@ class GameDBModel(Base):
     registration_close_date: Mapped[date] = mapped_column(
         Date, default=lambda context: context.get_current_parameters()["game_start_date"], nullable=False, index=True
     )
-    registered_players: Mapped[list["PlayerDBModel"]] = relationship("Player", secondary="registrations", back_populates="registered_games")
+    registered_players: Mapped[list["PlayerDBModel"]] = relationship("PlayerDBModel", secondary="registrations", back_populates="registered_games")
+    organizers: Mapped[list["OrganizerDBModel"]] = relationship("OrganizerDBModel", secondary="game_orgs", back_populates="organized_games")
 
     def __repr__(self):
         return f"<Game(id={self.id}, name={self.name})>"

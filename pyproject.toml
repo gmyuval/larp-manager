@@ -6,10 +6,11 @@ authors = [
 ]
 requires-python = ">3.12"
 dependencies = [
-    "fastapi",
+    "fastapi[all]",
     "pydantic",
     "uvicorn",
     "sqlalchemy",
+    "alembic"
 ]
 
 [project.optional-dependencies]
@@ -20,11 +21,16 @@ dev = [
     "isort",
     "pre-commit",
     "mypy",
+    "pytest",
+    "pytest-cov",
 ]
 
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["app"]
 
 [tool.black]
 line-length = 150

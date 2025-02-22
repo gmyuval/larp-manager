@@ -2,7 +2,7 @@ import logging
 from contextlib import contextmanager
 from typing import Any, Iterator
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
@@ -15,7 +15,7 @@ class DBConnectionHandler:
     def __init__(self, connection_string: str = "sqlite:///:memory:", **kwargs: Any) -> None:
         self._engine = create_engine(connection_string, echo=False, **kwargs)
         logger.info(f"Connected to database: {connection_string}")
-        self._session_maker = sessionmaker(bind=self._engine)
+        self._session_maker = sessionmaker(bind=self._engine, expire_on_commit=False)
 
     @contextmanager
     def session_scope(self) -> Iterator[Session]:
@@ -35,3 +35,6 @@ class DBConnectionHandler:
 
     def _drop_all(self):
         Base.metadata.drop_all(bind=self._engine)
+
+    def get_engine(self) -> Engine:
+        return self._engine

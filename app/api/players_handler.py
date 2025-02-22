@@ -13,12 +13,17 @@ logger = logging.getLogger(__name__)
 
 
 class PlayersController:
-    router = APIRouter(prefix="/players")
-
     def __init__(self, players_service: PlayersService):
         self._players_service = players_service
+        self.router = self._create_router()
 
-    @router.get("/{player_id}")
+    def _create_router(self) -> APIRouter:
+        router = APIRouter(prefix="/players")
+        router.add_api_route(path="/{player_id}", methods=["GET"], endpoint=self.get_player)
+        router.add_api_route(path="/by_criteria", methods=["POST"], endpoint=self.get_players_by_criteria)
+        router.add_api_route(path="/add_player", methods=["POST"], endpoint=self.add_player, response_model=PlayerDTO)
+        return router
+
     def get_player(self, player_id: str) -> Optional[PlayerDTO]:
         try:
             player_uuid = uuid.UUID(player_id)
@@ -29,12 +34,10 @@ class PlayersController:
             raise PlayerNotFound()
         return player.to_dto()
 
-    @router.post("/by_criteria")
     def get_players_by_criteria(self, get_dto: PlayersGetDTO) -> list[PlayerDTO]:
         players = self._players_service.get_players_by_filter(get_dto)
         return [player.to_dto() for player in players]
 
-    @router.post("/add_player", response_model=PlayerDTO)
     def add_player(self, req: PlayerCreateDTO) -> PlayerDTO:
         """
         this is some description for our add_player method

@@ -1,4 +1,5 @@
 import logging
+from datetime import date
 from typing import Any, Optional
 
 from sqlalchemy import select
@@ -15,8 +16,20 @@ logger = logging.getLogger(__name__)
 
 
 class PlayerDAO(BaseDAO):
-    def add(self, *, first_name: str, last_name: str, email: str, phone: Optional[str], pid: Optional[str] = None) -> PlayerDBModel:
-        new_player = PlayerDBModel(id=pid, first_name=first_name, last_name=last_name, email=email, phone=phone)
+    def add(
+        self,
+        *,
+        first_name: str,
+        last_name: str,
+        full_name: str,
+        email: str,
+        date_of_birth: Optional[date],
+        phone: Optional[str],
+        pid: Optional[str] = None,
+    ) -> PlayerDBModel:
+        new_player = PlayerDBModel(
+            id=pid, first_name=first_name, last_name=last_name, full_name=full_name, email=email, phone=phone, date_of_birth=date_of_birth
+        )
         with self._db_handler.session_scope() as session:  # type: Session
             existing_player = (
                 session.query(PlayerDBModel)

@@ -22,6 +22,7 @@ class PlayersGetDTO(BaseModel):
     phone_number: Optional[str] = None
     limit: Optional[int] = None
 
+    # noinspection PyNestedDecorators
     @model_validator(mode="before")
     @classmethod
     def normalize_fields(cls, values: dict[str, Any]) -> dict[str, Any]:

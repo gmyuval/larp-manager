@@ -10,5 +10,4 @@ if TYPE_CHECKING:
 
 class OrganizerDBModel(PersonDBModel):
     __tablename__ = "organizers"
-
-    organized_games: Mapped[list["GameDBModel"]] = relationship("Game", secondary="game_orgs", back_populates="organizers")
+    organized_games: Mapped[list["GameDBModel"]] = relationship("GameDBModel", secondary="game_orgs", back_populates="organizers")

@@ -16,11 +16,17 @@ class PlayersService:
         player = self._player_dao.add(
             first_name=player_create_dto.first_name,
             last_name=player_create_dto.last_name,
+            full_name=self.create_full_name(player_create_dto.first_name, player_create_dto.last_name),
+            date_of_birth=player_create_dto.date_of_birth,
             email=player_create_dto.email,
             phone=player_create_dto.phone_number,
         )
 
         return Player.from_db_model(player)
+
+    @staticmethod
+    def create_full_name(first_name: str, last_name: str) -> str:
+        return f"{first_name} {last_name}"
 
     def get_player_by_id(self, player_id: UUID) -> Optional[Player]:
         player_dao = self._player_dao.get_by_id(str(player_id))

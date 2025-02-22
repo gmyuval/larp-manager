@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 class PlayerDBModel(PersonDBModel):
     __tablename__ = "players"
 
-    date_of_birth: Mapped[date] = mapped_column(Date, nullable=False)
-    registered_games: Mapped[list["GameDBModel"]] = relationship("Game", secondary="registrations", back_populates="players")
+    date_of_birth: Mapped[date] = mapped_column(Date, nullable=True)
+    registered_games: Mapped[list["GameDBModel"]] = relationship("GameDBModel", secondary="registrations", back_populates="registered_players")
 
     def __repr__(self):
         return f"<Player(id={self.id}, name={self.full_name})>"
